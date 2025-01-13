@@ -1,0 +1,179 @@
+/* 设置页面背景 */
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0; /* 页面背景色 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* 输入框和下拉菜单容器 */
+.input-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px; /* 设置元素之间的间距 */
+    align-items: center; /* 垂直居中 */
+}
+
+.input-container input {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input-container select {
+    width: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 保存按钮样式 */
+.save-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50; /* 绿色背景 */
+    color: white; /* 白色文字 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #45a049; /* 鼠标悬停时背景色 */
+}
+
+/* 设置 A4 纸的尺寸 */
+.a4-page {
+    width: 794px; /* A4 纸宽度 */
+    height: 1123px; /* A4 纸高度 */
+    background-color: #fff; /* 纸张背景色 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* 纸张阴影 */
+    position: relative;
+    padding: 20px; /* 纸张内边距 */
+    box-sizing: border-box;
+    border: 1px solid #000; /* 添加边框 */
+}
+
+/* 纸张边距区域 */
+.a4-page::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid #ccc; /* 边距实线 */
+    pointer-events: none; /* 防止遮挡点击事件 */
+}
+
+/* 网格容器 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr); /* 11 列 */
+    grid-template-rows: repeat(11, 1fr); /* 11 行 */
+    gap: 2px; /* 网格间距 */
+    width: 100%;
+    height: 100%;
+}
+
+/* 每个田字格的样式 */
+.cell {
+    position: relative;
+    border: 1px solid #4CAF50; /* 清新绿色边框 */
+    box-sizing: border-box;
+}
+
+/* 拼音横线区域 */
+.pinyin-lines {
+    width: 100%;
+    height: 35%; /* 调整拼音区域高度 */
+    position: relative;
+    border-bottom: 1px solid #4CAF50; /* 底部边框 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 四线格样式 */
+.pinyin-lines .four-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pinyin-lines .four-lines .line {
+    width: 100%;
+    height: 1px; /* 线条高度 */
+    background-color: #B2DFDB; /* 浅蓝色横线 */
+}
+
+/* 拼音字母样式 */
+.pinyin-lines .pinyin-text {
+    position: absolute;
+    top: 50%; /* 调整拼音字母的位置 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Arial, sans-serif; /* 拼音使用无衬线字体 */
+    font-size: 18px; /* 调整拼音字体大小 */
+    color: #000; /* 字体颜色 */
+    line-height: 1; /* 确保拼音字母在四线格中正确对齐 */
+}
+
+/* 声调符号样式 */
+.pinyin-lines .tone-mark {
+    position: absolute;
+    top: 60%; /* 调整声调符号的位置，位于第三线和第四线之间 */
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif; /* 声调符号使用无衬线字体 */
+    font-size: 14px; /* 声调符号字体大小 */
+    color: #000; /* 字体颜色 */
+}
+
+/* 田字格内部十字线 */
+.cell::before,
+.cell::after {
+    content: '';
+    position: absolute;
+    background-color: #B2DFDB; /* 浅蓝色十字线 */
+}
+
+/* 水平中线 */
+.cell::before {
+    top: calc(35% + 50% * 0.65); /* 调整写字区域的中线位置 */
+    left: 0;
+    width: 100%;
+    height: 1px;
+}
+
+/* 垂直中线 */
+.cell::after {
+    left: 50%;
+    top: 35%; /* 从拼音区域下方开始 */
+    width: 1px;
+    height: 65%; /* 仅覆盖写字区域 */
+    transform: translateX(-50%); /* 确保垂直线居中 */
+}
+
+/* 汉字样式 */
+.character {
+    position: absolute;
+    top: calc(35% + 32.5%); /* 调整汉字的位置 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "楷体", "KaiTi", serif; /* 汉字使用楷体 */
+    font-size: 48px; /* 默认字体大小 */
+    color: #000; /* 字体颜色 */
+}
