@@ -113,10 +113,23 @@ body {
     justify-content: space-between;
 }
 
+/* 四线格的线条样式 */
 .pinyin-lines .four-lines .line {
     width: 100%;
     height: 1px; /* 线条高度 */
-    background-color: #B2DFDB; /* 浅蓝色横线 */
+    background-color: transparent; /* 背景透明 */
+}
+
+/* 第一条和第四条线为实线 */
+.pinyin-lines .four-lines .line:first-child,
+.pinyin-lines .four-lines .line:last-child {
+    border-top: 1px solid #B2DFDB; /* 实线，颜色浅一点 */
+}
+
+/* 中间两条线为虚线 */
+.pinyin-lines .four-lines .line:nth-child(2),
+.pinyin-lines .four-lines .line:nth-child(3) {
+    border-top: 1px dashed #B2DFDB; /* 虚线，颜色浅一点 */
 }
 
 /* 拼音字母样式 */
@@ -147,7 +160,8 @@ body {
 .cell::after {
     content: '';
     position: absolute;
-    background-color: #B2DFDB; /* 浅蓝色十字线 */
+    background-color: transparent; /* 背景透明 */
+    z-index: 0; /* 确保十字线在汉字下方 */
 }
 
 /* 水平中线 */
@@ -156,6 +170,7 @@ body {
     left: 0;
     width: 100%;
     height: 1px;
+    border-top: 1px dashed #B2DFDB; /* 虚线样式，颜色浅一点 */
 }
 
 /* 垂直中线 */
@@ -165,6 +180,7 @@ body {
     width: 1px;
     height: 65%; /* 仅覆盖写字区域 */
     transform: translateX(-50%); /* 确保垂直线居中 */
+    border-left: 1px dashed #B2DFDB; /* 虚线样式，颜色浅一点 */
 }
 
 /* 汉字样式 */
@@ -176,4 +192,56 @@ body {
     font-family: "楷体", "KaiTi", serif; /* 汉字使用楷体 */
     font-size: 48px; /* 默认字体大小 */
     color: #000; /* 字体颜色 */
+    z-index: 1; /* 确保汉字在十字线上方 */
+}
+
+/* 拼音选择图标样式 */
+.pinyin-lines .pinyin-select-icon {
+    position: absolute;
+    top: 50%; /* 调整图标位置 */
+    left: calc(50% + 40px); /* 动态出现在拼音后面 */
+    transform: translateY(-50%);
+    font-size: 14px;
+    cursor: pointer;
+    color: #2E7D32; /* 加深颜色，更明显 */
+    z-index: 10; /* 确保图标在田字格上方 */
+}
+
+/* 拼音模态框样式 */
+.pinyin-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 确保模态框在最上层 */
+}
+
+.pinyin-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    width: 100%;
+}
+
+.pinyin-modal-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pinyin-modal-option {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.pinyin-modal-option:hover {
+    background-color: #f0f0f0;
 }
