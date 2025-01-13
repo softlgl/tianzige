@@ -6,6 +6,3 @@
 #### 效果图
 
 ![页面展示](https://github.com/softlgl/tianzige/blob/main/img/%E6%95%88%E6%9E%9C%E5%9B%BE.png)
-
-![保存效果](https://github.com/softlgl/tianzige/blob/main/img/%E4%BF%9D%E5%AD%98%E5%90%8E%E6%95%88%E6%9E%9C.png)
-
