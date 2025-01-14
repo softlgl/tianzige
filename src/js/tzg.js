@@ -2,7 +2,6 @@
 const gridContainer = document.getElementById('grid-container');
 const characterInput = document.getElementById('character-input');
 const fontSizeSelect = document.getElementById('font-size-select');
-const saveButton = document.getElementById('save-button');
 
 var { pinyin } = pinyinPro;
 
@@ -181,32 +180,94 @@ function getTimestamp() {
     return `${year}${month}${day}${hours}${minutes}${seconds}`;
 }
 
-// 保存为图片
-saveButton.addEventListener('click', () => {
-    const a4Page = document.getElementById('a4-page');
+// 获取保存按钮和容器
+const saveDropdown = document.querySelector('.save-dropdown');
+const saveButton = document.getElementById('save-button');
+const saveOptions = document.querySelector('.save-options');
 
+// 点击保存按钮显示/隐藏选项
+saveButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    saveDropdown.classList.toggle('open');
+});
+
+// 点击选项处理保存
+saveOptions.addEventListener('click', (e) => {
+    if (e.target.classList.contains('save-option')) {
+        const format = e.target.dataset.format;
+        saveDropdown.classList.remove('open');
+        
+        if (format === 'image') {
+            saveAsImage();
+        } else if (format === 'pdf') {
+            saveAsPdf();
+        }
+    }
+});
+
+// 点击页面其他位置关闭下拉菜单
+document.addEventListener('click', () => {
+    saveDropdown.classList.remove('open');
+});
+
+// 通用隐藏拼音图标函数
+function hidePinyinIcons() {
     const pinyinIcons = document.querySelectorAll('.pinyin-select-icon');
-    // 隐藏所有拼音选择图标
     pinyinIcons.forEach(icon => {
         icon.style.display = 'none';
     });
+}
+
+// 通用显示拼音图标函数
+function showPinyinIcons() {
+    const pinyinIcons = document.querySelectorAll('.pinyin-select-icon');
+    pinyinIcons.forEach(icon => {
+        icon.style.display = 'block';
+    });
+}
+
+// 保存为图片
+function saveAsImage() {
+    const a4Page = document.getElementById('a4-page');
+    hidePinyinIcons();
 
     html2canvas(a4Page, {
-        scale: 2, // 提高图片清晰度
-        useCORS: true, // 允许跨域资源
+        scale: 2,
+        useCORS: true,
     }).then(canvas => {
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
-        // 生成时间戳并附加到文件名中
-        const timestamp = getTimestamp(); // 获取时间戳
-        const fileName = `tzg-${timestamp}.png`; // 新文件名
-
-        link.download = fileName; // 设置下载文件名
+        const timestamp = getTimestamp();
+        const fileName = `tzg-${timestamp}.png`;
+        link.download = fileName;
         link.click();
-
-        // 保存完成后显示拼音选择图标
-        pinyinIcons.forEach(icon => {
-            icon.style.display = 'block';
-        });
+        showPinyinIcons();
     });
-});
+}
+
+// 保存为PDF
+function saveAsPdf() {
+    const a4Page = document.getElementById('a4-page');
+    hidePinyinIcons();
+
+    html2canvas(a4Page, {
+        scale: 2,
+        useCORS: true,
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        const timestamp = getTimestamp();
+        const fileName = `tzg-${timestamp}.pdf`;
+        pdf.save(fileName);
+        showPinyinIcons();
+    });
+}
+
+// 添加事件监听器
+saveImageButton.addEventListener('click', saveAsImage);
+savePdfButton.addEventListener('click', saveAsPdf);

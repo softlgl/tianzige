@@ -18,7 +18,16 @@
             <option value="72">72px</option>
         </select>
         <!-- 保存按钮 -->
-        <button class="save-button" id="save-button">保存为图片</button>
+        <div class="save-dropdown">
+            <button class="save-button" id="save-button">
+                保存
+                <span class="arrow">&#9660;</span>
+            </button>
+            <div class="save-options">
+                <div class="save-option" data-format="image">保存为图片</div>
+                <div class="save-option" data-format="pdf">保存为PDF</div>
+            </div>
+        </div>
     </div>
 
     <!-- A4 纸张 -->
@@ -32,6 +41,10 @@
     <script src="./js/pinyin-pro.js"></script>
     <!-- 引入 html2canvas -->
     <script src="./js/html2canvas.min.js"></script>
+    <!-- 引入 jsPDF -->
+    <script src="./js/jspdf.min.js"></script>
+    <!-- 引入 HanziWriter -->
+    <script src="./js/hanzi-writer.min.js"></script>
     <script src="./js/tzg.js"></script>
 </body>
 </html>

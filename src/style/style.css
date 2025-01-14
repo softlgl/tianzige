@@ -34,19 +34,105 @@ body {
     border-radius: 4px;
 }
 
+/* 保存按钮容器 */
+.save-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
 /* 保存按钮样式 */
 .save-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50; /* 绿色背景 */
-    color: white; /* 白色文字 */
-    border: none;
-    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+    border-radius: 6px;
     cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .save-button:hover {
-    background-color: #45a049; /* 鼠标悬停时背景色 */
+    background-color: #4CAF50;
+    color: white;
+    border-color: transparent;
+}
+
+/* 下拉箭头 */
+.save-button .arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* 保存选项容器 */
+.save-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 120px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 100;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* 展开状态 */
+.save-dropdown.open .save-options {
+    display: block;
+}
+
+.save-dropdown.open .save-button .arrow {
+    transform: rotate(180deg);
+}
+
+/* 保存选项样式 */
+.save-option {
+    padding: 8px 16px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.save-option:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.save-option:hover {
+    background-color: #f8f8f8;
+    color: #2E7D32;
+}
+
+.save-option::before {
+    content: '✓';
+    color: transparent;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.save-option:hover::before {
+    color: #2E7D32;
+}
+
+/* 展开状态 */
+.save-dropdown.open .save-options {
+    display: block;
+}
+
+.save-dropdown.open .save-button .arrow {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 /* 设置 A4 纸的尺寸 */
@@ -181,6 +267,16 @@ body {
     height: 65%; /* 仅覆盖写字区域 */
     transform: translateX(-50%); /* 确保垂直线居中 */
     border-left: 1px dashed #B2DFDB; /* 虚线样式，颜色浅一点 */
+}
+
+/* 笔画显示区域 */
+.stroke-area {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    width: 100%;
+    height: 65%;
+    z-index: 2;
 }
 
 /* 汉字样式 */
