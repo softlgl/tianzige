@@ -2,65 +2,116 @@
 body {
     margin: 0;
     padding: 20px;
-    background-color: #f0f0f0; /* 页面背景色 */
+    background: linear-gradient(180deg, #f5f6f8 0%, #ebeef2 100%) fixed; /* 柔和的纵向渐变背景 */
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* 输入框和下拉菜单容器 */
 .input-container {
+    position: sticky;
+    top: 8px;
+    z-index: 50; /* 滚动多页时工具栏保持可见 */
+    width: 794px; /* 与 A4 纸等宽，保证左右对齐 */
+    max-width: 100%; /* 窄屏不溢出 */
     margin-bottom: 20px;
     display: flex;
-    gap: 10px; /* 设置元素之间的间距 */
-    align-items: center; /* 垂直居中 */
+    flex-wrap: wrap; /* 窄屏时换行 */
+    align-items: center;
+    gap: 8px 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
-.input-container input {
-    width: 200px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.input-container input[type="text"] {
+    flex: 1 1 160px;
+    min-width: 140px;
+    height: 38px;
+    padding: 0 12px;
+    font-size: 14px;
+    color: #333;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
 }
 
 .input-container select {
-    width: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    height: 38px;
+    padding: 0 6px;
+    font-size: 14px;
+    color: #333;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    cursor: pointer;
+    width: auto;
 }
 
-/* 保存按钮容器 */
+.input-container input[type="text"]:focus,
+.input-container select:focus {
+    border-color: #4CAF50;
+    background: #ffffff;
+}
+
+/* 带标签的字段组 */
+.field {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.field-label {
+    font-size: 13px;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+/* 分组分隔线 */
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: #e5e7eb;
+}
+
+/* 保存按钮容器（推到工具栏最右侧） */
 .save-dropdown {
     position: relative;
     display: inline-block;
+    margin-left: auto;
 }
 
 /* 保存按钮样式 */
 .save-button {
-    padding: 10px 24px;
+    height: 38px;
+    padding: 0 20px;
     font-size: 14px;
     font-weight: 500;
-    background-color: #f8f9fa;
-    color: #4CAF50;
-    border: 1px solid #4CAF50;
-    border-radius: 6px;
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid transparent;
+    border-radius: 8px;
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    box-sizing: border-box;
 }
 
 .save-button:hover {
-    background-color: #4CAF50;
-    color: white;
-    border-color: transparent;
+    background-color: #43A047;
 }
 
 /* 下拉箭头 */
@@ -140,11 +191,13 @@ body {
     width: 794px; /* A4 纸宽度 */
     height: 1123px; /* A4 纸高度 */
     background-color: #fff; /* 纸张背景色 */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* 纸张阴影 */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.08); /* 双层柔和阴影，纸张轻轻浮起 */
     position: relative;
     padding: 20px; /* 纸张内边距 */
     box-sizing: border-box;
-    border: 1px solid #000; /* 添加边框 */
+    border: 1px solid #e3e6ea; /* 极浅灰描边替代纯黑边框 */
+    display: flex; /* 纵向排列页眉与网格 */
+    flex-direction: column;
 }
 
 /* 纸张边距区域 */
@@ -166,7 +219,8 @@ body {
     grid-template-rows: repeat(11, 1fr); /* 11 行 */
     gap: 2px; /* 网格间距 */
     width: 100%;
-    height: 100%;
+    flex: 1; /* 占据页眉以下剩余高度 */
+    min-height: 0;
 }
 
 /* 每个田字格的样式 */
@@ -221,23 +275,18 @@ body {
 /* 拼音字母样式 */
 .pinyin-lines .pinyin-text {
     position: absolute;
-    top: 50%; /* 调整拼音字母的位置 */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: Arial, sans-serif; /* 拼音使用无衬线字体 */
-    font-size: 18px; /* 调整拼音字体大小 */
-    color: #000; /* 字体颜色 */
-    line-height: 1; /* 确保拼音字母在四线格中正确对齐 */
-}
-
-/* 声调符号样式 */
-.pinyin-lines .tone-mark {
-    position: absolute;
-    top: 60%; /* 调整声调符号的位置，位于第三线和第四线之间 */
+    top: 0; /* 行盒占满整个拼音区，基线位置由 line-height 决定 */
     left: 50%;
     transform: translateX(-50%);
-    font-family: Arial, sans-serif; /* 声调符号使用无衬线字体 */
-    font-size: 14px; /* 声调符号字体大小 */
+    font-family: Arial, sans-serif; /* 拼音使用无衬线字体 */
+    /* 严格按四线三格规范定位，字号/行高均随格子高度自适应（--cell-h 由 JS 写入）：
+         拼音区高 = 0.35×格高，4 线分 3 格，小写字母应骑在第 2 格，基线落在格底 0.233×格高处。
+         Arial 基线在行盒内的位置 = (行高 − 1.117em)/2 + 0.905em，令其等于 0.233×格高，
+         反解得字号 = 0.167×格高。
+       横向另有硬约束：6 字母拼音（zhuang/shuang）在 Arial 下约 0.547em/字母，
+       格宽 66.5px 最多容纳 6 字母，故字号不得超过约 0.18×格高——纵向约束更严，取 0.167。 */
+    font-size: calc(var(--cell-h, 102px) * 0.167);
+    line-height: calc(var(--cell-h, 102px) * 0.35);
     color: #000; /* 字体颜色 */
 }
 
@@ -282,11 +331,12 @@ body {
 /* 汉字样式 */
 .character {
     position: absolute;
-    top: calc(35% + 32.5%); /* 调整汉字的位置 */
+    top: calc(35% + 32.5%); /* 调整汉字的位置（写字区几何中心） */
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: "楷体", "KaiTi", serif; /* 汉字使用楷体 */
-    font-size: 48px; /* 默认字体大小 */
+    line-height: 1; /* 消除行距带来的字面重心偏移，保证光学居中 */
+    font-size: 48px; /* 默认字体大小（实际由 JS 按占格比例设置） */
     color: #000; /* 字体颜色 */
     z-index: 1; /* 确保汉字在十字线上方 */
 }
@@ -297,39 +347,75 @@ body {
     top: 50%; /* 调整图标位置 */
     left: calc(50% + 40px); /* 动态出现在拼音后面 */
     transform: translateY(-50%);
-    font-size: 14px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
     color: #2E7D32; /* 加深颜色，更明显 */
     z-index: 10; /* 确保图标在田字格上方 */
 }
 
-/* 拼音模态框样式 */
-.pinyin-modal {
+.pinyin-lines .pinyin-select-icon svg {
+    display: block;
+    width: 13px;
+    height: 13px;
+}
+
+/* 模态框基础样式（拼音选择 / 笔顺演示 共用） */
+.modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明遮罩 */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000; /* 确保模态框在最上层 */
 }
 
-.pinyin-modal-content {
+.modal-content {
+    position: relative;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    max-width: 300px;
     width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow: auto; /* 笔画多的字不会顶破视口 */
 }
 
-.pinyin-modal-title {
+.modal-title {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
+    padding-right: 24px; /* 给关闭按钮留位 */
+}
+
+/* 右上角关闭按钮（两种模态框统一，之前拼音选择只能点遮罩关闭） */
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #999;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modal-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* 拼音选项列表 */
+.pinyin-modal .modal-content {
+    max-width: 320px; /* 选项短，比笔顺演示窄一些更紧凑 */
 }
 
 .pinyin-modal-option {
@@ -338,6 +424,359 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+.pinyin-modal-option:last-child {
+    border-bottom: none;
+}
+
 .pinyin-modal-option:hover {
     background-color: #f0f0f0;
+    color: #2E7D32;
+}
+
+/* 多页容器 */
+#pages-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* 页面间距 */
+}
+
+/* 描红字样式（浅灰，供描摹） */
+.character.trace {
+    color: #b0b0b0;
+}
+
+/* 示范字可点击（查看笔顺） */
+.character:not(.trace) {
+    cursor: pointer;
+}
+
+/* 页眉：标题 + 姓名/日期栏 */
+.page-header {
+    flex: 0 0 auto;
+    text-align: center;
+    margin-top: 12px; /* 标题与纸顶留出呼吸空间 */
+    margin-bottom: 14px;
+}
+
+.page-title {
+    display: inline-block;
+    min-width: 240px;
+    padding: 0 8px;
+    font-family: "楷体", "KaiTi", serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.page-meta {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 15px;
+    color: #333;
+}
+
+.meta-field {
+    display: inline-block;
+    min-width: 130px;
+    min-height: 20px;
+    border-bottom: 1px solid #999;
+    text-align: center;
+    font-family: "楷体", "KaiTi", serif;
+}
+
+[contenteditable]:focus {
+    outline: 1px dashed #4CAF50;
+}
+
+/* 米字格斜线（切换为米字格时显示） */
+.diagonals {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    width: 100%;
+    height: 65%;
+    pointer-events: none;
+    display: none;
+    z-index: 0;
+}
+
+.mi-grid .diagonals {
+    display: block;
+    background-image:
+        linear-gradient(to top right, transparent calc(50% - 0.5px), #B2DFDB calc(50% - 0.5px), #B2DFDB calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+        linear-gradient(to bottom right, transparent calc(50% - 0.5px), #B2DFDB calc(50% - 0.5px), #B2DFDB calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+/* 笔顺演示模态框（基础样式复用 .modal，这里只放差异） */
+.stroke-modal .modal-content {
+    text-align: center;
+    max-width: 460px;
+}
+
+.stroke-modal-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.stroke-modal-actions button {
+    padding: 6px 18px;
+    font-size: 14px;
+    border: 1px solid #4CAF50;
+    background-color: #f8f9fa;
+    color: #4CAF50;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.stroke-modal-actions button:hover {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+/* 笔画拆解图 */
+.stroke-steps {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 4px 2px;
+    max-width: 420px;
+    overflow-x: auto; /* 笔画多的字横向滚动 */
+}
+
+.stroke-step {
+    flex: 0 0 auto;
+    padding: 4px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.stroke-step:hover {
+    border-color: #4CAF50;
+}
+
+.stroke-step svg {
+    display: block;
+    width: 56px;
+    height: 56px;
+}
+
+.stroke-step-label {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* 字帖纸上的笔顺拆解栏（示范格右侧，横跨 STRIP_COLS 格的独立盒子） */
+.stroke-strip {
+    position: relative;
+    z-index: 2; /* 盖住被占用的田字格 */
+    display: flex;
+    align-items: stretch; /* 必须拉伸：frames 靠自身高度算列数，塌成内容高会算错 */
+    gap: 4px;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    background: #fff;
+    /* 实线 + 比田字格浅一档的绿：与内部辅助线的虚线区分开——
+       实线=容器边界，浅色=不抢田字格的视觉主导 */
+    border: 1px solid #66BB6A;
+    font-size: 11px;
+    color: #bbb;
+}
+
+/* 笔画序列：自适应网格换行，尽量放大单格且保证全部笔画可见（列数由 JS 按笔画数算） */
+.stroke-frames {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-auto-rows: min-content;
+    align-content: center;
+    justify-content: center;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.stroke-frame {
+    position: relative; /* 供笔序号定位 */
+    align-self: start; /* 不被grid 轨道拉伸，保持 aspect-ratio 的正方形 */
+    aspect-ratio: 1;
+    max-width: 34px; /* 笔画少时不过分撑大 */
+    justify-self: center;
+}
+
+/* 笔序号：解决网格排布下「不知道该从哪看到哪」的方向问题。
+   数字放在格子右上角，并加白色描边作为兜底分离；
+   字形（见下方 svg 规则）已缩放并左下偏移，让出右上角空间。
+   末笔同样标数字（保持 1..N 序列完整，避免被误读成漏笔），
+   其「成品态」由满格黑字自证，无需额外颜色强调。 */
+.stroke-frame-num {
+    position: absolute;
+    top: 0;
+    right: 1px;
+    z-index: 2;
+    font-family: Arial, sans-serif;
+    font-size: 8px;
+    line-height: 1;
+    color: #6b6b6b;
+    text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 1px #fff;
+    pointer-events: none;
+}
+
+/* 加载中：仅一条骨架线，不出现文字 */
+.stroke-strip.is-loading .stroke-frames::after {
+    content: '';
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 55%;
+    height: 2px;
+    border-radius: 1px;
+    background: #eef2f1;
+}
+
+/* 加载失败：降级为一行浅色提示，点击重试 */
+.stroke-strip.is-error {
+    border-color: #e4e7e7;
+    cursor: pointer;
+}
+
+.stroke-strip.is-error .stroke-frames {
+    place-content: center;
+    color: #b5b5b5;
+}
+
+.stroke-strip.is-error:hover {
+    border-color: #4CAF50;
+}
+
+.stroke-strip.is-error:hover .stroke-frames {
+    color: #2E7D32;
+}
+
+/* 字形缩放并向左下偏移，给右上角的笔序号让出空间，
+   避免笔画密集时数字与字形重叠 */
+.stroke-frame svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: translate(-6%, 6%) scale(0.84);
+}
+
+/* 笔顺拆解图开关（胶囊样式） */
+.strip-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+/* 自绘勾选框：与同排的 select 统一语言（8px 圆角 / 浅灰描边 / 白底） */
+.strip-toggle input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    margin: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.strip-toggle input[type="checkbox"]:hover {
+    border-color: #4CAF50;
+}
+
+/* 勾选态：绿底 + 白色对勾 */
+.strip-toggle input[type="checkbox"]:checked {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.strip-toggle input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1.5px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.strip-toggle:hover {
+    border-color: #4CAF50;
+}
+
+.strip-toggle:has(input:checked) {
+    border-color: #4CAF50;
+    background: #E8F5E9;
+    color: #2e7d32;
+}
+
+/* 打印样式 */
+@media print {
+    body {
+        display: block;
+        padding: 0;
+        background-color: #fff;
+    }
+
+    .input-container {
+        display: none;
+    }
+
+    #pages-container {
+        display: block;
+        gap: 0;
+    }
+
+    .a4-page {
+        width: 210mm;
+        height: 296mm; /* 略小于 297mm，避免四舍五入导致溢出到第二页 */
+        box-shadow: none;
+        border-color: transparent; /* 打印时不输出描边 */
+        margin: 0;
+        page-break-after: always; /* 每页纸张单独一页 */
+    }
+
+    .a4-page:last-child {
+        page-break-after: auto;
+    }
+
+    /* 打印时隐藏拼音选择图标 */
+    .pinyin-select-icon {
+        display: none !important;
+    }
+
+    /* 打印时隐藏弹窗 */
+    .modal {
+        display: none !important;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 0;
 }

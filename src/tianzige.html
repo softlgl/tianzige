@@ -4,19 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>礼物田字格字帖</title>
-    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/style.css?v=17">
 </head>
 <body>
-    <!-- 输入框和字体大小选择 -->
+    <!-- 工具栏：输入 + 设置 + 保存 -->
     <div class="input-container">
-        <input type="text" id="character-input" placeholder="请输入汉字（最多11个）" maxlength="11">
-        <select id="font-size-select">
-            <option value="24">24px</option>
-            <option value="36">36px</option>
-            <option value="48" selected>48px</option>
-            <option value="60">60px</option>
-            <option value="72">72px</option>
-        </select>
+        <input type="text" id="character-input" placeholder="请输入汉字，如：金木水火土">
+        <div class="field">
+            <span class="field-label">字号</span>
+            <select id="font-size-select">
+                <option value="60">60% 小</option>
+                <option value="70">70% 较小</option>
+                <option value="80" selected>80% 标准</option>
+                <option value="90">90% 较大</option>
+                <option value="100">100% 大</option>
+            </select>
+        </div>
+        <div class="field">
+            <span class="field-label">描红</span>
+            <select id="trace-count-select">
+                <option value="0">不描红</option>
+                <option value="1">1 个</option>
+                <option value="2" selected>2 个</option>
+                <option value="3">3 个</option>
+                <option value="4">4 个</option>
+                <option value="5">5 个</option>
+                <option value="10">整行</option>
+            </select>
+        </div>
+        <div class="field">
+            <span class="field-label">格子</span>
+            <select id="grid-type-select">
+                <option value="tian" selected>田字格</option>
+                <option value="mi">米字格</option>
+            </select>
+        </div>
+        <label class="strip-toggle">
+            <input type="checkbox" id="stroke-strip-toggle">笔顺图
+        </label>
+        <span class="toolbar-divider"></span>
         <!-- 保存按钮 -->
         <div class="save-dropdown">
             <button class="save-button" id="save-button">
@@ -26,16 +52,13 @@
             <div class="save-options">
                 <div class="save-option" data-format="image">保存为图片</div>
                 <div class="save-option" data-format="pdf">保存为PDF</div>
+                <div class="save-option" data-format="print">直接打印</div>
             </div>
         </div>
     </div>
 
-    <!-- A4 纸张 -->
-    <div class="a4-page" id="a4-page">
-        <div class="grid-container" id="grid-container">
-            <!-- 田字格将通过 JavaScript 动态生成 -->
-        </div>
-    </div>
+    <!-- A4 页面容器（多页动态生成） -->
+    <div id="pages-container"></div>
 
     <!-- 引入拼音库 -->
     <script src="./js/pinyin-pro.js"></script>
@@ -43,8 +66,8 @@
     <script src="./js/html2canvas.min.js"></script>
     <!-- 引入 jsPDF -->
     <script src="./js/jspdf.min.js"></script>
-    <!-- 引入 HanziWriter -->
+    <!-- 引入 HanziWriter（笔顺演示） -->
     <script src="./js/hanzi-writer.min.js"></script>
-    <script src="./js/tzg.js"></script>
+    <script src="./js/tzg.js?v=13"></script>
 </body>
 </html>
