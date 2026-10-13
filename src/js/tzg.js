@@ -41,8 +41,14 @@ function createCell() {
     cell.appendChild(pinyinLines);
 
     // 添加米字格斜线容器（默认隐藏，切换为米字格时显示）
+    // 用内联 SVG 画对角线：html2canvas 对渐变细线支持差，导出图片/PDF 会变色块
     const diagonals = document.createElement('div');
     diagonals.classList.add('diagonals');
+    diagonals.innerHTML =
+        '<svg viewBox="0 0 100 100" preserveAspectRatio="none">' +
+        '<line x1="0" y1="0" x2="100" y2="100" stroke="#B2DFDB" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+        '<line x1="100" y1="0" x2="0" y2="100" stroke="#B2DFDB" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+        '</svg>';
     cell.appendChild(diagonals);
 
     return cell;
@@ -747,7 +753,7 @@ function showPinyinIcons() {
     });
 }
 
-// 保存为图片（多页时纵向拼接为一张长图）
+// 保存为图片（单页直接下 PNG，多页打包为 ZIP，每页一张图）
 function saveAsImage() {
     const pages = Array.from(document.querySelectorAll('.a4-page'));
     hidePinyinIcons();
@@ -764,34 +770,74 @@ function saveAsImage() {
     });
 
     chain.then(() => {
-        let mergedCanvas = canvases[0];
-        if (canvases.length > 1) {
-            const gap = 40; // 页间距（2倍缩放下的 20px）
-            const width = canvases[0].width;
-            const height = canvases.reduce((sum, c) => sum + c.height, 0) + gap * (canvases.length - 1);
-
-            mergedCanvas = document.createElement('canvas');
-            mergedCanvas.width = width;
-            mergedCanvas.height = height;
-            const ctx = mergedCanvas.getContext('2d');
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, width, height);
-
-            let y = 0;
-            canvases.forEach(c => {
-                ctx.drawImage(c, 0, y);
-                y += c.height + gap;
-            });
+        if (canvases.length === 1) {
+            // 单页：直接下载 PNG
+            downloadCanvasPng(canvases[0], `tzg-${getTimestamp()}.png`);
+            showPinyinIcons();
+            return;
         }
 
-        const link = document.createElement('a');
-        link.href = mergedCanvas.toDataURL('image/png');
-        const timestamp = getTimestamp();
-        const fileName = `tzg-${timestamp}.png`;
-        link.download = fileName;
-        link.click();
+        if (typeof JSZip === 'undefined') {
+            // JSZip 未加载（如离线）：退回单张长图
+            downloadCanvasPng(mergeCanvases(canvases), `tzg-${getTimestamp()}.png`);
+            showPinyinIcons();
+            alert('压缩包组件未加载（可能离线），已改为单张长图导出');
+            return;
+        }
+
+        // 多页：每页一张图打包成 ZIP
+        const zip = new JSZip();
+        const blobJobs = canvases.map((canvas, index) => new Promise(resolve => {
+            canvas.toBlob(blob => {
+                zip.file(`第${index + 1}页.png`, blob);
+                resolve();
+            }, 'image/png');
+        }));
+
+        Promise.all(blobJobs)
+            .then(() => zip.generateAsync({ type: 'blob' }))
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `tzg-${getTimestamp()}.zip`;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(link.href), 5000);
+                showPinyinIcons();
+            });
+    }).catch(err => {
+        console.error(err);
         showPinyinIcons();
+        alert('导出失败，请重试');
     });
+}
+
+// 单张 canvas 下载为 PNG
+function downloadCanvasPng(canvas, fileName) {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = fileName;
+    link.click();
+}
+
+// 多页合并为一张长图（JSZip 不可用时的回退方案）
+function mergeCanvases(canvases) {
+    const gap = 40; // 页间距（2倍缩放下的 20px）
+    const width = canvases[0].width;
+    const height = canvases.reduce((sum, c) => sum + c.height, 0) + gap * (canvases.length - 1);
+
+    const merged = document.createElement('canvas');
+    merged.width = width;
+    merged.height = height;
+    const ctx = merged.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+
+    let y = 0;
+    canvases.forEach(c => {
+        ctx.drawImage(c, 0, y);
+        y += c.height + gap;
+    });
+    return merged;
 }
 
 // 保存为PDF（多页时导出多页PDF）

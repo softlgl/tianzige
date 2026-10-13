@@ -505,9 +505,12 @@ body {
 
 .mi-grid .diagonals {
     display: block;
-    background-image:
-        linear-gradient(to top right, transparent calc(50% - 0.5px), #B2DFDB calc(50% - 0.5px), #B2DFDB calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-        linear-gradient(to bottom right, transparent calc(50% - 0.5px), #B2DFDB calc(50% - 0.5px), #B2DFDB calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+.mi-grid .diagonals svg {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 /* 笔顺演示模态框（基础样式复用 .modal，这里只放差异） */
